@@ -1,0 +1,59 @@
+{
+  "name": "Hana",
+  "generator": "built-in image_gen",
+  "generatedOn": "2026-10-05",
+  "canvas": {
+    "width": 1254,
+    "height": 1254
+  },
+  "variants": {
+    "neutral": "neutral.png",
+    "blink": "blink.png",
+    "talk": "talk.png",
+    "wave": "wave.png"
+  },
+  "features": {
+    "eyes": {
+      "x": 520,
+      "y": 222,
+      "width": 212,
+      "height": 67
+    },
+    "mouth": {
+      "x": 594,
+      "y": 303,
+      "width": 75,
+      "height": 44
+    }
+  },
+  "rigHints": {
+    "headPivot": [
+      630,
+      370
+    ],
+    "bodyPivot": [
+      630,
+      740
+    ],
+    "waveHandCenter": [
+      905,
+      374
+    ],
+    "originalSize": [
+      1254,
+      1254
+    ]
+  },
+  "alphaVerified": true,
+  "limitations": [
+    "Raster pose assets; not a source layered PSD or Cubism model",
+    "Use facial overlay crops because generated full-body expression variants contain small non-face changes",
+    "Crown and lower thighs touch vertical frame limits; fit full canvas with stage padding"
+  ],
+  "prompts": {
+    "neutral": "Use case: stylized-concept\nAsset type: production transparent 2D anime character sprite for a browser-based Live2D-style rig editor.\nPrimary request: Create exactly one exquisitely polished original Japanese anime young adult woman, age 22, cute and warm, standing squarely front-facing, from top of hair through upper thighs, neutral relaxed pose. Long silky lavender hair, artfully segmented bangs, flowing side locks reaching upper thighs, a delicate silver crescent hair ornament on screen-left, large luminous aqua eyes with violet lower gradients, closed small gentle smile, subtle peach blush. Tasteful elegant pale lilac/ivory long-sleeve blouse with a lavender ribbon bow, deep violet pleated skirt, silver small accents.\nComposition/framing: 1536 x 1536 square canvas. Head centered at x=768, crown near y=135, eyes around y=435, chin near y=555. Upper thighs end near y=1420. Centered symmetric frontal body. Both hands fully visible near hip height around y=1100; arms slightly spaced from torso and bent very slightly, with transparent air gaps to make arms easy to isolate. Hair full silhouette, entire hands, skirt corners all comfortably inside canvas. Keep 100 pixels clear margin on every edge.\nStyle/medium: high-end Japanese anime illustration, crisp clean fine linework, refined high-detail cel shading, luminous satin hair highlights, layered soft skin light, rich fold shadows. Production character-sheet quality, refined and adorable, no chibi proportions.\nLighting/mood: soft key light upper screen-left, delicate cool rim light at screen-right, readable shadow shapes; warm friendly expression. Hair should show several long pearlescent highlight streaks.\nScene/backdrop: TRUE TRANSPARENT ALPHA BACKGROUND, every pixel outside the character transparent. No environment, no floor, no checkerboard painted into image, no background glow, no drop shadow.\nConstraints: one character only, direct front view, visible hands with five elegant anatomically correct fingers, closed mouth, open eyes. Preserve natural adult proportions. No text, logos, watermark, border, cropped extremities, props, explicit clothing, weapons, additional character. Asset must be genuinely transparent PNG with clean antialiased edges.",
+    "blink": "Use case: identity-preserve\nAsset type: blink expression variant for 2D character rig editor.\nInput image: edit target is the attached neutral character asset.\nPrimary request: Change ONLY both eyes from open to gently closed blinking eyes. Keep the original character artwork and all pixels as close to identical as possible everywhere outside the eyelids. Draw fine dark curved closed upper eyelash lines following existing eye widths, preserve surrounding eyebrows, blush, nose, mouth, fringe, jewelry. The exact same original cute adult anime woman, lavender hair and ivory lilac costume.\nComposition/framing: Exact same 1254x1254 square canvas, camera, crop, character scale and location as reference. Eyes remain centered near x=570 and x=680, y=255. Full frontal body and relaxed downward arms unchanged.\nScene/backdrop: True transparent alpha background, preserve original transparency; no painted checkerboard or environment.\nConstraints: Change only the eye expression to a natural blink. Mouth remains same small closed smile. Keep same head pose, facial proportions, colors, highlights, shadows, hair contours, arm pose, clothing and body position. No zoom, no rearranging, no new adornments, no text, no watermark. Retain clean alpha edges.",
+    "talk": "Use case: identity-preserve\nAsset type: open-mouth speaking expression variant for 2D character rig editor.\nInput image: edit target is the attached neutral character asset.\nPrimary request: Change ONLY the small closed smile into a charming small open speaking mouth. A neat dark peach inside mouth with a subtle pink tongue and a tiny visible hint of upper teeth; mouth opening approximately 25 pixels wide and 15 pixels tall, located at the original mouth center near (630,322). Keep neutral open aqua violet eyes. This is a soft friendly talking expression.\nComposition/framing: Exact same 1254x1254 square canvas, camera, crop, character scale and location as original. Keep face, eyes, nose, eyebrows, blush, hair, crescent ornament, jewelry, costume, skirt, hands, arm pose, thighs and alpha silhouette unchanged. Same original adult anime woman.\nScene/backdrop: True transparent alpha background; preserve original background transparency and clean cutout. No checkerboard or environment.\nConstraints: Change only the mouth to a natural small open speaking mouth. Do not change eye expression, body pose, face proportions, head angle, all hair contours, colors, highlights, shadows or costume details. No zoom, no rearranging, no new adornments, no text, no watermark. This is a carefully registered animation frame derived from the exact original image.",
+    "wave": "Use case: identity-preserve\nAsset type: waving pose variant for the same transparent 2D anime character.\nInput image: attached neutral artwork is the exact identity, costume, face, hair, shading and frame reference and the edit target.\nPrimary request: Change ONLY the arm on SCREEN-RIGHT: raise her left arm in a friendly wave. Her forearm should point upward, hand with five anatomically correct softly spread fingers and palm facing viewer, next to her face on screen-right around x=1000,y=375. Sleeve remains the identical ornate ivory long sleeve. Elbow at x=975,y=700. Preserve the unchanged screen-left arm down by her hip. Preserve original neutral open eyes and closed small smile exactly.\nComposition/framing: Exact same 1254x1254 square canvas, character scale, head location and torso and skirt positions as reference. The waving hand MUST be fully inside the square frame; keep within x=860..1110 and y=235..470 with at least 100 pixels outside margin. Crown and lower thigh crop stay exactly like original. No zoom or crop changes.\nStyle/medium: Same exquisite high-quality original anime rendering, lavender silky long hair, shiny aqua violet eyes, ivory lavender blouse and violet pleated skirt, fine crisp linework, detailed luminous cel shading. Same adult character, age 22.\nScene/backdrop: TRUE TRANSPARENT ALPHA BACKGROUND, absolutely no environment or painted checkerboard. Clean pristine antialiased edges with NO magenta, blue or white fringe, NO isolated stray pixels or stray paint outside silhouette. Transparency only outside character.\nConstraints: Only screen-right arm and the immediately occluded hair area may change. Keep face, expression, head angle, all hair elsewhere, clothing torso, crescent jewelry, screen-left arm, skirt and thigh contours unchanged. Five fingers, friendly natural hand. No extra arm, no doubled hands, no prop, no text, no watermark, no backdrop."
+  }
+}

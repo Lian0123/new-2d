@@ -1,0 +1,22 @@
+{
+  "canvas": {
+    "width": 1254,
+    "height": 1254
+  },
+  "revision": 3,
+  "source": "Built-in imagegen repairs; originals retained",
+  "symmetry": "Both arms use the same canonical sprite and mirrored joints at runtime. Symmetric hair construction retains strand detail and the original one-sided moon ornament.",
+  "seams": "32px upper/sleeve overlap, 36px bodice/skirt overlap, wrist tucked behind cuff",
+  "hand": "One rigid five-finger sprite; no rest/wave texture crossfade",
+  "parts": [
+    "body.png",
+    "bodice.png",
+    "skirt.png",
+    "hair-back.png",
+    "hair-middle.png",
+    "hair-front.png",
+    "arm-upper.png",
+    "sleeve.png",
+    "hand-open.png"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "canvas": {
+    "width": 1254,
+    "height": 1254
+  },
+  "generation": "GPT image_gen transparent assets",
+  "registration": "body exact source registration; hair components registered to crown/temples",
+  "parts": [
+    "hair-back.png",
+    "body.png",
+    "bodice.png",
+    "skirt.png",
+    "sleeve-left.png",
+    "arm-right-rest.png",
+    "arm-right-wave.png",
+    "sleeve-right-rest.png",
+    "sleeve-right-wave.png",
+    "hair-middle.png",
+    "hair-front.png"
+  ],
+  "limitations": [
+    "Sleeve extraction retains painted strand overlaps from source art.",
+    "Hair parts are registered new artwork; outer locks differ slightly from the original complete illustration.",
+    "Hidden garment areas were GPT-repainted; fine occlusion seams may need artist refinement."
+  ]
+}
