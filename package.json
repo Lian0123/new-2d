@@ -10,6 +10,7 @@
     "build:demo": "tsc --noEmit && vite build --mode demo",
     "preview:demo": "vite preview --mode demo --host 127.0.0.1 --port 5180 --strictPort",
     "test:demo": "playwright test --config playwright.demo.config.ts",
+    "test:live": "tsx scripts/check-live-demo.ts",
     "start": "tsx server/index.ts",
     "check": "tsc --noEmit",
     "test": "node --import tsx --test src/core/*.test.ts server/*.test.ts",

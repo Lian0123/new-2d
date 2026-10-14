@@ -1,0 +1,60 @@
+import { chromium, expect } from '@playwright/test';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import sharp from 'sharp';
+
+const url = process.env.DEMO_URL || 'https://lian0123.github.io/new-2d/';
+const browser = await chromium.launch({ headless: true });
+try {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  const errors: string[] = [], failedRequests: string[] = [];
+  const characters: Array<Record<string, unknown>> = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('response', response => { if (response.status() >= 400) failedRequests.push(response.url()); });
+  page.on('requestfailed', request => failedRequests.push(request.url()));
+  const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
+  expect(response!.status()).toBe(200);
+  await expect(page.getByTestId('runtime-status')).toHaveAttribute('data-state', 'ready', { timeout: 45000 });
+  await page.getByRole('button', { name: '暫停動畫', exact: true }).click();
+  const canvas = page.getByTestId('character-canvas');
+  const pixels = () => canvas.evaluate(element => (element as HTMLCanvasElement).toDataURL());
+  for (const [id, name] of [['sakura', '櫻咲'], ['aoi', '蒼月'], ['yuzuki', '柚月'], ['rin', '凜音'], ['hana', '花音']]) {
+    await page.getByRole('button', { name: `選擇${name}`, exact: true }).click();
+    await expect(page.getByTestId('runtime-status')).toHaveAttribute('data-state', 'ready', { timeout: 45000 });
+    await expect(page.getByRole('combobox', { name: '動畫預設' })).toBeEnabled();
+    await page.getByRole('button', { name: '播放動畫', exact: true }).click();
+    await expect.poll(async () => Number((await page.getByTestId('playback-time').innerText()).split(' / ')[0])).toBeGreaterThan(0.05);
+    await page.getByRole('button', { name: '暫停動畫', exact: true }).click();
+    await page.getByRole('combobox', { name: '動畫預設' }).selectOption('眨眼微笑');
+    await expect(page.getByRole('button', { name: '播放動畫', exact: true })).toBeVisible();
+    await page.getByRole('slider', { name: '播放時間', exact: true }).fill('0');
+    const first = await pixels();
+    await page.getByRole('slider', { name: '播放時間', exact: true }).fill('1.15');
+    expect(await pixels()).not.toBe(first);
+    if (!await page.locator('details').evaluate(element => (element as HTMLDetailsElement).open)) await page.getByText('手動調整表情與動作', { exact: true }).click();
+    const beforeExpression = await pixels();
+    await page.getByRole('slider', { name: '左眼睜開', exact: true }).fill('0');
+    await page.getByRole('slider', { name: '右眼睜開', exact: true }).fill('0');
+    await page.getByRole('slider', { name: '嘴巴開合', exact: true }).fill('1');
+    await page.getByRole('slider', { name: '播放時間', exact: true }).fill('2');
+    expect(await pixels()).not.toBe(beforeExpression);
+    await page.getByRole('checkbox', { name: '顯示網格' }).check();
+    const grid = await pixels();
+    await page.getByRole('checkbox', { name: '顯示網格' }).uncheck();
+    expect(await pixels()).not.toBe(grid);
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: '下載透明 PNG' }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toBe(`mio-${id}.png`);
+    const image = sharp(await readFile((await download.path())!));
+    const metadata = await image.metadata(), stats = await image.stats();
+    expect(metadata).toMatchObject({ width: 1254, height: 1254, hasAlpha: true });
+    expect(stats.channels.at(-1)!.min).toBe(0); expect(stats.channels.at(-1)!.max).toBeGreaterThan(0);
+    characters.push({ id, name, animationControlsEnabled: true, animationAdvanced: true, presetChangesFrame: true, preservesPause: true, manualExpressionsChangeFrame: true, meshToggleChangesFrame: true, png: { width: 1254, height: 1254, hasAlpha: true } });
+    console.log(`${name}: live controls and transparent PNG verified`);
+    await page.getByRole('button', { name: '恢復動畫控制' }).click();
+  }
+  expect(errors).toEqual([]); expect(failedRequests).toEqual([]);
+  await mkdir('test-results/demo-live', { recursive: true });
+  await writeFile('test-results/demo-live/report.json', JSON.stringify({ checkedAt: new Date().toISOString(), url, browser: 'Chromium with default networking', httpStatus: response!.status(), characters, javascriptErrors: errors, failedRequests }, null, 2) + '\n');
+  console.log('All five live characters verified; report: test-results/demo-live/report.json');
+} finally { await browser.close(); }

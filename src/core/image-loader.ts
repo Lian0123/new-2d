@@ -15,7 +15,7 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
     // New character requests take priority over queued artwork from a disposed player.
     queue.unshift(() => {
       active++;
-      const image = new Image(); image.crossOrigin = 'anonymous'; image.decoding = 'async';
+      const image = new Image(); image.crossOrigin = 'anonymous'; image.decoding = 'async'; image.fetchPriority = 'high';
       let finished = false;
       const complete = (error?: Error) => {
         if (finished) return;

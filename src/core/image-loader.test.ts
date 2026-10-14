@@ -7,9 +7,10 @@ test('image loading bounds parallel transfers, shares pending URLs, and recovers
   let active = 0, peak = 0;
   const requests: string[] = [];
   class FakeImage {
-    crossOrigin = ''; decoding = ''; naturalWidth = 1254; naturalHeight = 1254;
+    crossOrigin = ''; decoding = ''; fetchPriority = ''; naturalWidth = 1254; naturalHeight = 1254;
     onload: (() => void) | null = null; onerror: (() => void) | null = null;
     set src(value: string) {
+      assert.equal(this.fetchPriority, 'high');
       requests.push(value); active++; peak = Math.max(peak, active);
       queueMicrotask(() => { active--; if (value === 'broken.png') this.onerror?.(); else this.onload?.(); });
     }
