@@ -1,5 +1,7 @@
 # GitHub Pages Demo
 
+線上網址：[https://lian0123.github.io/new-2d/](https://lian0123.github.io/new-2d/)。
+
 ## 操作示意
 
 1. 開啟展示頁，等待左下方出現「角色已載入・動畫可操作」。預設花音會循環播放「揮手招呼」。
@@ -40,7 +42,9 @@ npm run test:demo
 - 390px 手機版沒有水平溢出，仍能操作與切換角色。
 - 素材請求失敗時顯示錯誤並停用下載；恢復素材後可重試。
 
-2026-10-14 本機驗證：25 項單元測試、工作台建置、Demo 建置及 4 項瀏覽器測試全部通過。以上截圖來自這次成功的瀏覽器測試；尚未以線上 GitHub Pages 網址驗證。
+2026-10-14 本機及 GitHub Actions 驗證：25 項單元測試、工作台建置、Demo 建置及 4 項瀏覽器測試全部通過。以上截圖來自這次成功的本機瀏覽器測試。
+
+2026-10-14 23:17（Asia/Taipei）另外對實際 GitHub Pages 網址驗證：HTTP 200、花音載入完成、動畫時間前進、暫停並跳轉至 2.00 秒，以及 1254 × 1254 透明 PNG 下載全部成功；沒有 JavaScript 錯誤或失敗的請求。見 [線上驗證報告](demo/online-validation.json) 與 [成功的測試／部署流程](https://github.com/Lian0123/new-2d/actions/runs/38587538992)。
 - 正常互動流程沒有 JavaScript 錯誤、失敗的素材請求或 `/api` 請求。
 
 測試截圖儲存在 `test-results/`。CI 會將截圖與失敗時的 trace 上傳為 `demo-browser-qa` artifact，供檢查每次變更。GitHub Pages 發布需先在 repository Settings → Pages 將 Source 設為 GitHub Actions；本機測試通過不能替代實際線上部署驗證。

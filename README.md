@@ -4,7 +4,9 @@
 
 ## GitHub Pages 互動 Demo
 
-Demo 部署目標：[https://lian0123.github.io/new-2d/](https://lian0123.github.io/new-2d/)（首次發布需完成下方 Pages 設定；加入程式碼不代表網站已上線）。
+線上 Demo：[https://lian0123.github.io/new-2d/](https://lian0123.github.io/new-2d/)。已於 2026-10-14 發布並通過實際線上載入、動畫與透明 PNG 下載驗證。
+
+[![Demo 測試與部署](https://github.com/Lian0123/new-2d/actions/workflows/pages.yml/badge.svg)](https://github.com/Lian0123/new-2d/actions/workflows/pages.yml)
 
 獨立的靜態展示頁提供五位角色、花音的 11 種動畫、播放／暫停、時間軸跳轉、游標追蹤、網格、曝光／色溫與透明 PNG 下載。頁面顯示實際素材載入狀態，素材失敗時可重試。花音提供分層動畫；其他四位是姿勢插畫，提供光影與 PNG 控制。完整編輯與 ZIP 匯出仍使用本機工作台。
 

@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-10-14T15:17:17.395Z",
+  "url": "https://lian0123.github.io/new-2d/",
+  "deploymentRun": "https://github.com/Lian0123/new-2d/actions/runs/38587538992",
+  "httpStatus": 200,
+  "characterLoaded": true,
+  "animationAdvanced": true,
+  "pauseAndSeek": "2.00 seconds",
+  "png": {
+    "width": 1254,
+    "height": 1254,
+    "hasAlpha": true,
+    "transparentPixels": true,
+    "visiblePixels": true
+  },
+  "javascriptErrors": [],
+  "failedRequests": []
+}
