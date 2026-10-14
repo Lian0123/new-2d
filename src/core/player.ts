@@ -2,6 +2,7 @@ import { clamp, createDefaultProject, evaluatePose, smoothPose, type Layer, type
 import { GpuMeshRenderer } from './gpu-mesh';
 import { articulatedPose, handAnchor, handRotation, skinArmPoint } from './arm-rig';
 import { deformPosePoint, drawPoseFace } from './pose-rig';
+import { loadImage } from './image-loader';
 
 export interface PlayerOptions {
   mesh?: boolean; background?: 'studio' | 'transparent' | 'dark';
@@ -587,15 +588,6 @@ export function renderCharacter(ctx: CanvasRenderingContext2D, images: Character
   ctx.restore();
 }
 
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const image = new Image(); image.crossOrigin = 'anonymous'; image.decoding = 'async';
-    image.onload = () => { if (!image.naturalWidth || !image.naturalHeight) reject(new Error(`圖片沒有有效尺寸：${src.slice(0, 120)}`)); else resolve(image); };
-    image.onerror = () => reject(new Error(`角色圖片載入失敗：${src.startsWith('data:') ? '匯入圖片' : src}`));
-    image.src = src;
-  });
-}
-
 export class CharacterPlayer {
   private readonly canvas: HTMLCanvasElement;
   private readonly context: CanvasRenderingContext2D;
@@ -641,7 +633,7 @@ export class CharacterPlayer {
       const [neutral, blink, talk, wave, custom, armAssets, partEntries] = await Promise.all([
         image(project.assets.neutral), image(project.assets.blink), image(project.assets.talk), image(project.assets.wave),
         Promise.all(project.layers.filter(l => l.kind === 'custom' && l.src).map(async l => [l.id, await image(l.src!)] as const)),
-        project.assets.armless && project.assets.armRest && project.assets.armWave ? Promise.all([image(project.assets.armless), image(project.assets.armRest), image(project.assets.armWave)]) : Promise.resolve(undefined),
+        !project.layers.some(layer => layer.part === 'body') && project.assets.armless && project.assets.armRest && project.assets.armWave ? Promise.all([image(project.assets.armless), image(project.assets.armRest), image(project.assets.armWave)]) : Promise.resolve(undefined),
         Promise.all(project.layers.filter(l => l.part && l.src).flatMap(l => [image(l.src!).then(sprite => [l.id, asCanvas(sprite)] as const), ...(l.waveSrc ? [image(l.waveSrc).then(sprite => [`${l.id}:wave`, asCanvas(sprite)] as const)] : [])])),
       ]);
       if (this.disposed || token !== this.loadToken) return;

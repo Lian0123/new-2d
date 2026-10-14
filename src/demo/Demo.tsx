@@ -115,7 +115,7 @@ export default function Demo() {
         <aside className="controls" aria-label="展示控制">
           <div className="panel-heading"><div><span className="eyebrow">MAKE IT YOURS</span><h2>試著玩玩看</h2></div><button className="icon-button" aria-label="重設展示" onClick={reset}><RotateCcw size={17} /></button></div>
           <div className="control-section"><h3><span>01</span> 選擇角色</h3>
-            <div className="character-picker">{characterExamples.map(item => <button key={item.id} aria-label={`選擇${item.name}`} aria-pressed={character === item.id} onClick={() => setCharacter(item.id)}><img src={demoAsset(item.src)} alt="" /><span>{item.name}</span></button>)}</div>
+            <div className="character-picker">{characterExamples.map(item => <button key={item.id} aria-label={`選擇${item.name}`} aria-pressed={character === item.id} onClick={() => setCharacter(item.id)}><img crossOrigin="anonymous" src={demoAsset(item.src)} alt="" /><span>{item.name}</span></button>)}</div>
             <p className="helper">{example.layered ? '花音有 14 個圖層，可體驗表情與骨架動畫。' : `${example.name}可操作表情、視線、手勢與衣料動態。${character === 'yuzuki' ? '手與書本一起移動。' : '手勢保留原本姿態，做輕柔擺動。'}`}</p>
           </div>
           <fieldset disabled={status !== 'ready'} className="control-section"><legend><span>02</span> 動作與表情</legend>
