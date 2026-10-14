@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "concurrently -k -n api,studio \"tsx watch server/index.ts\" \"vite --host 127.0.0.1\"",
     "build": "tsc --noEmit && vite build",
+    "dev:demo": "vite --mode demo --host 127.0.0.1",
+    "build:demo": "tsc --noEmit && vite build --mode demo",
+    "preview:demo": "vite preview --mode demo --host 127.0.0.1 --port 5180 --strictPort",
+    "test:demo": "playwright test --config playwright.demo.config.ts",
     "start": "tsx server/index.ts",
     "check": "tsc --noEmit",
     "test": "node --import tsx --test src/core/*.test.ts server/*.test.ts",

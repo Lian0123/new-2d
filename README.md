@@ -2,6 +2,29 @@
 
 使用 **Node.js + TypeScript + React** 製作的 2D 動漫角色工作台。預設角色是 GPT 生成的高品質透明 PNG，日本動漫風格，具有完整的前／中／後髮、衣料與袖子分層。
 
+## GitHub Pages 互動 Demo
+
+Demo 部署目標：[https://lian0123.github.io/new-2d/](https://lian0123.github.io/new-2d/)（首次發布需完成下方 Pages 設定；加入程式碼不代表網站已上線）。
+
+獨立的靜態展示頁提供五位角色、花音的 11 種動畫、播放／暫停、時間軸跳轉、游標追蹤、網格、曝光／色溫與透明 PNG 下載。頁面顯示實際素材載入狀態，素材失敗時可重試。花音提供分層動畫；其他四位是姿勢插畫，提供光影與 PNG 控制。完整編輯與 ZIP 匯出仍使用本機工作台。
+
+```sh
+npm ci
+npm run build:demo
+npm run preview:demo
+```
+
+開啟 `http://127.0.0.1:5180/new-2d/`。Demo 輸出到 `dist-demo/`，使用原有播放器與素材，不需 Node API、外部字型或 CDN。修改展示頁時可使用 `npm run dev:demo`。
+
+發布：在此 repository 的 **Settings → Pages → Build and deployment → Source** 選 **GitHub Actions**，將變更推送到 `main`，或在 Actions 手動執行 **Demo · GitHub Pages**。工作流程會先驗證單元測試、兩種建置與 demo 瀏覽器測試，全部成功後才發布 `dist-demo/`；Pull Request 只驗證。部署步驟會提供實際網站網址。
+
+預設素材與網頁 base 為 `/new-2d/`；workflow 會依 repository 名稱設定。部署到帳號首頁或自訂網域時，建置時使用 `PAGES_BASE_PATH=/ npm run build:demo` 並相應修改 workflow 的 `PAGES_BASE_PATH`。參考 [Vite GitHub Pages 部署](https://vite.dev/guide/static-deploy.html#github-pages)與 [GitHub Pages 自訂工作流程](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)。
+
+- [操作示意、截圖與驗證方式](docs/DEMO.md)
+- 自動驗證：`npx playwright install chromium`，接著 `npm run build:demo && npm run test:demo`。測試使用建置後的靜態網站，無需先啟動工作台或 API。
+
+![桌面 Demo 操作示意](docs/demo/desktop.png)
+
 ## 開啟工作台
 
 ```sh
