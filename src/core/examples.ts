@@ -1,4 +1,5 @@
 import { createDefaultProject, type Project } from './model';
+import { poseProfiles } from './pose-rig';
 
 export const characterExamples = [
   { id: 'hana', name: '花音', english: 'Hana', pose: '正面 · 分層動畫', style: '月光禮服', src: '/assets/characters/hana/neutral.png', layered: true },
@@ -27,4 +28,15 @@ export function createExampleProject(id: string): Project {
 
 export function findCharacterExample(project: Project) {
   return characterExamples.find(item => project.assets.neutral === item.src || project.id === `example-${item.id}-v1`);
+}
+
+export function createAnimatedExampleProject(id: string): Project {
+  const project = createExampleProject(id);
+  if (id === 'hana') return project;
+  const profile = poseProfiles[id];
+  return { ...project, renderMode: 'pose', poseRig: structuredClone(profile.motion), rig: structuredClone(profile.rig),
+    parameters: { ...createDefaultProject().parameters },
+    settings: { autoBlink: true, idleMotion: true, pointerTracking: false },
+    mesh: { columns: 32, rows: 40, offsets: Array.from({ length: 33 * 41 }, () => ({ x: 0, y: 0 })) },
+  };
 }

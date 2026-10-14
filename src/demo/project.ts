@@ -1,4 +1,4 @@
-import { createExampleProject } from '../core/examples';
+import { createAnimatedExampleProject } from '../core/examples';
 import { applyMotionPreset } from '../core/motions';
 import type { Project } from '../core/model';
 
@@ -8,8 +8,7 @@ export function demoAsset(source: string): string {
 }
 
 export function createDemoProject(character: string, motion: string): Project {
-  const example = createExampleProject(character);
-  const project = character === 'hana' ? applyMotionPreset(example, motion) : example;
+  const project = applyMotionPreset(createAnimatedExampleProject(character), motion);
   return {
     ...project,
     assets: Object.fromEntries(Object.entries(project.assets).map(([key, value]) => [key, demoAsset(value)])) as Project['assets'],

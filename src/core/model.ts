@@ -30,9 +30,17 @@ export interface Layer {
 export interface Keyframe { time: number; value: number }
 export interface Track { id: string; parameter: ParameterId; keyframes: Keyframe[]; easing?: 'linear' | 'smooth' }
 
+export interface PoseArm { shoulder: Point; wrist: Point; radius: number; lift: number }
+export interface PoseRig {
+  head: Rect; chest: Rect; hair: Rect; cloth: Rect; anchor: Point;
+  armLeft: PoseArm; armRight: PoseArm;
+  coupledHands?: Rect;
+}
+
 export interface Project {
   version: 1; id: string; name: string;
-  renderMode?: 'illustration';
+  renderMode?: 'illustration' | 'pose';
+  poseRig?: PoseRig;
   canvas: { width: number; height: number };
   assets: { neutral: string; blink: string; talk: string; wave: string; armless?: string; armRest?: string; armWave?: string };
   parameters: Parameters;
@@ -159,7 +167,7 @@ function rect(value: unknown, path: string): Rect {
 export function validateProject(value: unknown): Project {
   const obj = record(value, 'project');
   if (obj.version !== 1) invalid('version', '僅支援版本 1');
-  if (obj.renderMode !== undefined && obj.renderMode !== 'illustration') invalid('renderMode', '不是支援的呈現方式');
+  if (obj.renderMode !== undefined && !['illustration', 'pose'].includes(obj.renderMode as string)) invalid('renderMode', '不是支援的呈現方式');
   const canvas = record(obj.canvas, 'canvas'), assets = record(obj.assets, 'assets');
   const params = record(obj.parameters, 'parameters'), lighting = record(obj.lighting, 'lighting');
   const rig = record(obj.rig, 'rig'), settings = record(obj.settings, 'settings');
@@ -227,9 +235,19 @@ export function validateProject(value: unknown): Project {
     if (!Array.isArray(raw.offsets) || raw.offsets.length !== (columns + 1) * (rows + 1)) invalid('mesh.offsets', '頂點數量必須與網格一致');
     mesh = { columns, rows, offsets: raw.offsets.map((value, index) => { const p = record(value, `mesh.offsets[${index}]`); return { x: numeric(p.x, `mesh.offsets[${index}].x`, -0.3, 0.3), y: numeric(p.y, `mesh.offsets[${index}].y`, -0.3, 0.3) }; }) };
   }
+  let poseRig: PoseRig | undefined;
+  if (obj.renderMode === 'pose') {
+    const raw = record(obj.poseRig, 'poseRig');
+    const arm = (value: unknown, path: string): PoseArm => {
+      const data = record(value, path);
+      return { shoulder: point(data.shoulder, `${path}.shoulder`), wrist: point(data.wrist, `${path}.wrist`), radius: numeric(data.radius, `${path}.radius`, 0.01, 0.3), lift: numeric(data.lift, `${path}.lift`, -15, 15) };
+    };
+    poseRig = { head: rect(raw.head, 'poseRig.head'), chest: rect(raw.chest, 'poseRig.chest'), hair: rect(raw.hair, 'poseRig.hair'), cloth: rect(raw.cloth, 'poseRig.cloth'), anchor: point(raw.anchor, 'poseRig.anchor'), armLeft: arm(raw.armLeft, 'poseRig.armLeft'), armRight: arm(raw.armRight, 'poseRig.armRight'), ...(raw.coupledHands ? { coupledHands: rect(raw.coupledHands, 'poseRig.coupledHands') } : {}) };
+  }
   return {
     version: 1, id: string(obj.id, 'id', 100), name: string(obj.name, 'name'),
-    ...(obj.renderMode === 'illustration' ? { renderMode: 'illustration' as const } : {}),
+    ...(obj.renderMode ? { renderMode: obj.renderMode as Project['renderMode'] } : {}),
+    ...(poseRig ? { poseRig } : {}),
     canvas: { width: numeric(canvas.width, 'canvas.width', 64, 8192, true), height: numeric(canvas.height, 'canvas.height', 64, 8192, true) },
     assets: cleanAssets,
     parameters,

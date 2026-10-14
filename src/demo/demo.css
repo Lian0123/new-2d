@@ -69,6 +69,11 @@ select { display: block; width: 100%; padding: 10px 12px; border: 1px solid #fff
 .toggle-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
 .toggle-row label { display: flex; align-items: center; gap: 5px; color: #a5a6bd; font-size: 10px; }
 input[type=checkbox] { accent-color: #af9cf3; margin: 0; width: 12px; height: 12px; }
+.manual-controls { margin-top: 18px; font-size: 11px; color: #a6a1c6; }
+.manual-controls summary { cursor: pointer; padding: 5px 0; }
+.manual-controls[open] summary { margin-bottom: 16px; }
+.manual-controls .range-label { margin-bottom: 18px; }
+.resume-motion { border: 1px solid #bbaaff30; background: #bbaaff10; color: #c9bafa; border-radius: 6px; padding: 7px 12px; font-size: 10px; }
 .range-label { display: flex; flex-wrap: wrap; justify-content: space-between; font-size: 11px; color: #a7a9c0; margin: 8px 0 17px; gap: 10px; }
 .range-label:last-child { margin-bottom: 2px; }
 .range-label output { font-size: 10px; color: #8b8fa9; }.range-label input { width: 100%; margin: 0; }

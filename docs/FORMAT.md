@@ -195,3 +195,5 @@ API 會限制 JSON 請求為 48 MiB，每張 PNG 為 12 MiB，總素材為 32 Mi
 ## 完整姿勢插畫
 
 可選欄位 `renderMode: "illustration"` 表示完整姿勢插畫，缺省時使用既有角色渲染。插畫使用 `assets.neutral`，保留 character 圖層的位移、縮放、旋轉與透明度，支援配件及光影；不套用花音的表情貼片、骨架或整體姿勢變形。四個必填 expression asset 欄位可共同引用同一張 PNG，匯出時只打包一次。可攜 JSON 往返會保留此欄位，匯出控制頁僅顯示適用的光影操作。
+
+`renderMode: "pose"` 是完整原畫的互動模式，必須提供 `poseRig`：`head`、`chest`、`hair`、`cloth` 為 0–1 註冊矩形；`anchor` 是固定支點；`armLeft`、`armRight` 各含 `shoulder`、`wrist`（0–1 座標）、`radius`（0.01–0.3）與 `lift`（-15 至 15 度）。可選 `coupledHands` 矩形讓雙手與持物共同移動。眼睛與嘴巴使用原有 `rig` 中的角色專屬矩形，沿用同一組參數、時間軸、光影、網格與 PNG／網頁匯出。此模式保留原畫姿態，手勢為有限幅度的連續變形，不使用花音的部件骨架。`validateProject` 會驗證並深複製這些欄位。

@@ -1,6 +1,7 @@
 import { clamp, createDefaultProject, evaluatePose, smoothPose, type Layer, type Lighting, type Parameters, type Point, type Project, type Rect } from './model';
 import { GpuMeshRenderer } from './gpu-mesh';
 import { articulatedPose, handAnchor, handRotation, skinArmPoint } from './arm-rig';
+import { deformPosePoint, drawPoseFace } from './pose-rig';
 
 export interface PlayerOptions {
   mesh?: boolean; background?: 'studio' | 'transparent' | 'dark';
@@ -204,6 +205,19 @@ function buildPartMasks(image: HTMLImageElement): { hairMask: HTMLCanvasElement;
 /** The deformation cage is in source image coordinates. All image parts share it. */
 export function deformPoint(point: Point, width: number, height: number, project: Project, pose: Parameters, motionTime: number): Point {
   if (project.renderMode === 'illustration') return { ...point };
+  if (project.renderMode === 'pose' && project.poseRig) {
+    const original = { ...point };
+    const q = deformPosePoint({ x: point.x / width, y: point.y / height }, project, pose, motionTime);
+    point = { x: q.x * width, y: q.y * height };
+    // Editable offsets stay registered to source vertices, before motion.
+    if (!project.mesh) return point;
+    const { columns, rows, offsets } = project.mesh;
+    const gx = clamp(original.x / width, 0, 1) * columns, gy = clamp(original.y / height, 0, 1) * rows;
+    const col = Math.min(columns - 1, Math.floor(gx)), row = Math.min(rows - 1, Math.floor(gy));
+    const fx = gx - col, fy = gy - row;
+    const a = offsets[row * (columns + 1) + col], b = offsets[row * (columns + 1) + col + 1], c = offsets[(row + 1) * (columns + 1) + col], d = offsets[(row + 1) * (columns + 1) + col + 1];
+    return { x: point.x + width * ((a.x * (1 - fx) + b.x * fx) * (1 - fy) + (c.x * (1 - fx) + d.x * fx) * fy), y: point.y + height * ((a.y * (1 - fx) + b.y * fx) * (1 - fy) + (c.y * (1 - fx) + d.y * fx) * fy) };
+  }
   const u = point.x / width, v = point.y / height;
   const separateRig = project.layers.some(layer => layer.part === 'handRight');
   const head = (1 - smooth(0.29, 0.47, v)) * (separateRig ? 1 - smooth(0.13, 0.18, Math.abs(u - 0.5)) : 1);
@@ -339,8 +353,9 @@ function compose(surface: HTMLCanvasElement, images: CharacterImages, project: P
   ctx.save(); ctx.translate(padding, 0);
   // Pose illustrations retain their painted anatomy; expression patches and
   // Hana's joint weights must not be applied to unrelated poses.
-  if (project.renderMode === 'illustration') {
+  if (project.renderMode === 'illustration' || project.renderMode === 'pose') {
     ctx.drawImage(images.neutral, 0, 0, width, height);
+    if (project.renderMode === 'pose') drawPoseFace(ctx, images.neutral, project, pose);
     ctx.restore(); applyLighting(ctx, surface.width, height, project.lighting);
     return ctx;
   }
@@ -485,6 +500,7 @@ export function renderCharacter(ctx: CanvasRenderingContext2D, images: Character
     const source = options.surface ?? document.createElement('canvas');
     const compositionKey = JSON.stringify([
       project.renderMode,
+      project.poseRig,
       project.rig.eyeLeft, project.rig.eyeRight, project.rig.mouth, project.lighting,
       parameters.eyeOpenLeft, parameters.eyeOpenRight, parameters.eyeX, parameters.eyeY,
       parameters.browY, parameters.mouthOpen, parameters.mouthSmile, parameters.armRaise,
@@ -519,7 +535,7 @@ export function renderCharacter(ctx: CanvasRenderingContext2D, images: Character
         original[row][col] = p; distorted[row][col] = deform(p);
       }
     }
-    const needsDeformation = project.renderMode !== 'illustration' && (Math.abs(parameters.angleX) + Math.abs(parameters.angleY) + Math.abs(parameters.angleZ) + Math.abs(parameters.hairSway) + parameters.breath + parameters.armRaise + parameters.windStrength + Math.abs(parameters.clothSway) + Math.abs(parameters.sleeveSwing) > 0.0001 || project.settings.idleMotion || Boolean(base && (base.x || base.y || base.rotation)) || Boolean(project.mesh?.offsets.some(p => p.x || p.y)));
+    const needsDeformation = project.renderMode !== 'illustration' && (Math.abs(parameters.angleX) + Math.abs(parameters.angleY) + Math.abs(parameters.angleZ) + Math.abs(parameters.hairSway) + parameters.breath + parameters.armRaise + parameters.armRaiseLeft + Math.abs(parameters.wristWave) + Math.abs(parameters.wristWaveLeft) + parameters.windStrength + Math.abs(parameters.clothSway) + Math.abs(parameters.sleeveSwing) > 0.0001 || project.settings.idleMotion || Boolean(base && (base.x || base.y || base.rotation)) || Boolean(project.mesh?.offsets.some(p => p.x || p.y)));
     if (!needsDeformation) ctx.drawImage(source, 0, 0);
     else {
       if (options.gpu) options.gpu.renderScale = Math.max(0.25, Math.min(1, fit * (base?.scale ?? 1)));
